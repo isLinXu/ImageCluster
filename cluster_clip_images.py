@@ -12,7 +12,10 @@ import shutil
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
+'''
+required
+export HF_ENDPOINT=https://hf-mirror.com
+'''
 class ImageClusterer:
     def __init__(self, img_folder, output_folder, model_name='clip-ViT-B-32', file_types=('*.jpg', '*.png'),
                  batch_size=128, threshold=0.9, min_community_size=10, init_max_size=1000):
