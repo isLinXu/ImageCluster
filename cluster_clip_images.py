@@ -17,7 +17,7 @@ required
 export HF_ENDPOINT=https://hf-mirror.com
 '''
 class ImageClusterer:
-    def __init__(self, img_folder, output_folder, model_name='clip-ViT-B-32', file_types=('*.jpg', '*.png'),
+    def __init__(self, img_folder, output_folder, model_name='clip-ViT-B-32', file_types=('*.jpg', '*.png', '*.jpeg'),
                  batch_size=128, threshold=0.9, min_community_size=10, init_max_size=1000):
         self.img_folder = img_folder
         self.output_folder = output_folder
@@ -42,7 +42,12 @@ class ImageClusterer:
     def encode_images(self, img_names):
         encoded_images = []
         for filepath in tqdm(img_names, desc="Encoding images"):
-            encoded_images.append(torch.tensor(self.model.encode(Image.open(filepath))))
+            try:
+                img = Image.open(filepath)
+                encoded_images.append(torch.tensor(self.model.encode(img)))
+            except Exception as e:
+                print(f'Error processing file {filepath}: {str(e)}')
+                continue
         return torch.stack(encoded_images)
 
     def community_detection(self, embeddings):
